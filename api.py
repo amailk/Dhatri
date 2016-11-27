@@ -64,32 +64,25 @@ def welcome():
 @app.route("/welcome_key", methods=['GET','POST'])
 def welcome_key():
     r = twiml.Response()
-
     if 'Digits' in request.values:
         choice = request.values['Digits']
 
         if choice == '2':
-            r.say('What is your last name?')
-	    r.record(transcribe="true", transcribeCallback="/welcome_key", action="/firstname", finishOnKey="*")
+            r.say('You selected 2')
+            r.say("What is your last name?")
+            r.record(transcribe="true", transcribeCallback="/welcome_key", action="/firstname", finishOnKey="*")
             return str(r)
 
         elif choice == '1':
             r.say('You need support. We are here to help!')
             return str(r)
+        elif choice == '3':
+            r.say('Dharti is a service to get you connected with midwives to have a successful pregnancy by monitoring the physical, psychological, and social well-being of the mother throughout the childbearing cycle')
         else:
             r.say("Sorry, I don't understand that choice.")
 
     r.redirect('/welcome_key')
 
-    return str(r)
-
-@app.route("/lastname", methods=['GET', 'POST'])
-def lastname():
-    r = twiml.Response()
-
-    r.say("What is your last name?")
-    r.record(transcribe="true", transcribeCallback="/transcribe_lastname", action="/firstname", finishOnKey="*")
-    return str(r)
 
 @app.route("/firstname", methods=['GET', 'POST'])
 def firstname():
