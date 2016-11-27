@@ -4,7 +4,7 @@ from twilio import twiml
 
 app = Flask(__name__)
 
-REGISTER_GREET = ''' "Hello. Please listen closely for the options.'''
+REGISTER_GREET = ''' "Hello, Welcome to Dharti! Please listen closely for the follwing options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3."'''
 
 @app.route("/", methods=["GET", "POST"])
 def welcome():
@@ -24,36 +24,31 @@ def welcome_key():
 
         if choice == '2':
             r.say('You selected 2')
-            with r.gather(action="/lastname")
+            r.say("What is your last name?")
+            r.record(transcribe="true", transcribeCallback="/welcome_key", action="/firstname", finishOnKey="*")
             return str(r)
 
         elif choice == '1':
             r.say('You need support. We are here to help!')
             return str(r)
+        elif choice == '3':
+            r.say('Dharti is a service to get you connected with midwives to have a positive pregnancy')
         else:
             r.say("Sorry, I don't understand that choice.")
 
-    with r.gather(numDigits=1) as gather:
-        gather.say("If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3.")
+    with r.gather(numDigits=1, action="/lastname") as gather:
+        gather.say("")
 
     r.redirect('/welcome_key')
 
     #return str(r)
-
-@app.route("/lastname", methods=['GET', 'POST'])
-def lastname():
-    r = twiml.Response()
-
-    r.say("What is your last name?")
-    r.record(transcribe="true", transcribeCallback="/transcribe_lastname", action="/firstname", finishOnKey="*")
-    return str(r)
 
 @app.route("/firstname", methods=['GET', 'POST'])
 def firstname():
     r = twiml.Response()
 
     r.say("What is your first name?")
-    r.record(transcribe="true", transcribeCallback="/transcribe_firstname", action="/register_dob", finishOnKey="*")
+    r.record(transcribe="true", transcribeCallback="/transcribe_firstname", action="/register_phone", finishOnKey="*")
     return str(r)
 
 @app.route("/register_dob", methods=['GET','POST'])
