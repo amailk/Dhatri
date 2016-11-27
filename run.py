@@ -1,4 +1,8 @@
-from twilio import twiml
+from flask import Flask, request, redirect
+#from __future__ import with_statement
+import twilio.twiml
+
+app = Flask(__name__)
 
 GREETING = ''' "Hello. Please listen closely for the options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3.'''
 
@@ -108,3 +112,6 @@ def register_confirm():
         r.redirect("/welcome")
 
     return str(r)
+
+if __name__ == "__main__":
+    app.run(debug=True)
