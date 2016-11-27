@@ -25,11 +25,12 @@ AUTH_TOKEN = "118a797d9a3a376cae56b1ab0ed34497"
  
 client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN) 
  
-client.messages.create(
+message = client.messages.create(
     to="+19059660696", 
     from_="+12264002125 ", 
     body="Test SMS", 
 )
+print(message.sid)
 
 # User Registration
 
@@ -40,5 +41,5 @@ client.messages.create(
 
 
 
-connection.commit()
-connection.close() 
+#connection.commit()
+#connection.close() 
