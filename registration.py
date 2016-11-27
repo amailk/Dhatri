@@ -36,9 +36,6 @@ def welcome_key():
         else:
             r.say("Sorry, I don't understand that choice.")
 
-    with r.gather(numDigits=1, action="/lastname") as gather:
-        gather.say("")
-
     r.redirect('/welcome_key')
 
     #return str(r)
