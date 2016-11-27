@@ -1,13 +1,17 @@
+from flask import Flask, request, redirect
+#from __future__ import with_statement
 from twilio import twiml
 
-GREETING = ''' "Hello. Please listen closely for the options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3.'''
+app = Flask(__name__)
 
-@app.route("/welcome", methods=["GET", "POST"])
+REGISTER_GREET = ''' "Hello. Please listen closely for the options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3.'''
+
+@app.route("/welcome_register", methods=["GET", "POST"])
 def welcome():
 
     r = twiml.Response()
     with r.gather(action="/welcome_key", numDigits=1) as g:
-        g.say(GREETING)
+        g.say(REGISTER_GREET)
 
     return str(r)
 
@@ -52,7 +56,7 @@ def register_phone():
 def register_mc():
     r = twiml.Response()
 
-    r.say("When was your last menstrual cycel? Please state in the order: year, month, and then date. Press the star key when you're done.")
+    r.say("When was your last menstrual cycle? Please state in the order: year, month, and then date. Press the star key when you're done.")
     r.record(transcribe="true", transcribeCallback="/transcribe_mc", action="/register_secondary", finishOnKey="*")
     return str(r)
 
@@ -108,3 +112,6 @@ def register_confirm():
         r.redirect("/welcome")
 
     return str(r)
+
+if __name__ == "__main__":
+    app.run(debug=True)
