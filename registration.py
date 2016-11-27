@@ -4,7 +4,7 @@ from twilio import twiml
 
 app = Flask(__name__)
 
-REGISTER_GREET = ''' "Hello, Welcome to Dharti! Please listen closely for the follwing options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3."'''
+REGISTER_GREET = ''' "Hello, Welcome to Dharti! Please listen closely for the follwing options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3. To book an appointment press 4"'''
 
 @app.route("/", methods=["GET", "POST"])
 def welcome():
@@ -32,7 +32,7 @@ def welcome_key():
             r.say('You need support. We are here to help!')
             return str(r)
         elif choice == '3':
-            r.say('Dharti is a service to get you connected with midwives to have a positive pregnancy')
+            r.say('Dharti is a service to get you connected with midwives to have a successful pregnancy by monitoring the physical, psychological, and social well-being of the mother throughout the childbearing cycle')
         else:
             r.say("Sorry, I don't understand that choice.")
 
