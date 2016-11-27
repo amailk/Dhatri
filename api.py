@@ -168,7 +168,7 @@ dataPerson = {
 cursor.execute(addPersonalInfo, dataPerson)
 connection.commit()
 
-connection.commit()
+
 connection.close() 
 
 if __name__ == "__main__":
