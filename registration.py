@@ -4,9 +4,9 @@ from twilio import twiml
 
 app = Flask(__name__)
 
-REGISTER_GREET = ''' "Hello. Please listen closely for the options. If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3.'''
+REGISTER_GREET = ''' "Hello. Please listen closely for the options.'''
 
-@app.route("/welcome_register", methods=["GET", "POST"])
+@app.route("/", methods=["GET", "POST"])
 def welcome():
 
     r = twiml.Response()
@@ -17,22 +17,44 @@ def welcome():
 
 @app.route("/welcome_key", methods=['GET','POST'])
 def welcome_key():
-    digit_pressed = request.values.get('Digits', None)
     r = twiml.Response()
 
-    if digit_pressed == "2":
-        r.say("What is your name? Press the star key when you're done.")
-        r.record(transcribe="true", transcribeCallback="/transcribe_name", action="/register_dob", finishOnKey="*")
-        return str(r)
-    elif digit_pressed == "1":
-        r.say("What is your question")
-        r.hangup()
-        return str(r)
-    elif digit_pressed == "3":
-        r.say("More details about our service... blah blah")
-        r.hangup()
-        return str(r)
+    if 'Digits' in request.values:
+        choice = request.values['Digits']
 
+        if choice == '2':
+            r.say('You selected 2')
+            with r.gather(action="/lastname")
+            return str(r)
+
+        elif choice == '1':
+            r.say('You need support. We are here to help!')
+            return str(r)
+        else:
+            r.say("Sorry, I don't understand that choice.")
+
+    with r.gather(numDigits=1) as gather:
+        gather.say("If you are calling because you have a question, please press 1. If you would like to register for our service, please press 2. If you would like to learn more about our service, please press 3.")
+
+    r.redirect('/welcome_key')
+
+    #return str(r)
+
+@app.route("/lastname", methods=['GET', 'POST'])
+def lastname():
+    r = twiml.Response()
+
+    r.say("What is your last name?")
+    r.record(transcribe="true", transcribeCallback="/transcribe_lastname", action="/firstname", finishOnKey="*")
+    return str(r)
+
+@app.route("/firstname", methods=['GET', 'POST'])
+def firstname():
+    r = twiml.Response()
+
+    r.say("What is your first name?")
+    r.record(transcribe="true", transcribeCallback="/transcribe_firstname", action="/register_dob", finishOnKey="*")
+    return str(r)
 
 @app.route("/register_dob", methods=['GET','POST'])
 def register_dob():
@@ -57,15 +79,6 @@ def register_mc():
     r = twiml.Response()
 
     r.say("When was your last menstrual cycle? Please state in the order: year, month, and then date. Press the star key when you're done.")
-    r.record(transcribe="true", transcribeCallback="/transcribe_mc", action="/register_secondary", finishOnKey="*")
-    return str(r)
-
-
-@app.route("/register_mc", methods=['GET','POST'])
-def register_mc():
-    r = twiml.Response()
-
-    r.say("When was your last menstrual cycel? Please state in the order: year, month, and then date. Press the star key when you're done.")
     r.record(transcribe="true", transcribeCallback="/transcribe_mc", action="/register_secondary", finishOnKey="*")
     return str(r)
 
